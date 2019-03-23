@@ -1,3 +1,13 @@
+<!--
+|--------------------------------------------------------------------------
+| Prohect Name: SaaS App for mulitiple company
+| Author Name: Created By Md Abu Ahsan Basir
+| Zend Certified PHP Engineer
+| Authour link: http://www.zend.com/en/yellow-pages/ZEND030936
+|--------------------------------------------------------------------------
+|
+|
+-->
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -18,37 +28,22 @@
 <section class="container-fluid">
     <div class="row">
         <div class="col-md-9">
-            <div class="map" id="map"></div>
+            <div class="map" id="map" data-id="{{ $map_id }}"></div>
         </div>
         <div class="col-md-3 right_sidebar">
             <div class="sidebar-content">
                 <div class="results">
                     @forelse($datas as $data)
                         <div class="result">
-                            <a href="javascript:void(0)" data-url="{{ $data->url }}" data-id="{{ $data->id }}" class="result_link"><h2 class="result-title">{{ $data->title }}</h2>
+                            <a href="javascript:void(0)" data-url="data.html" data-id="{{ $data->id }}" class="result_link"><h2 class="result-title">{{ $data->company }}</h2>
                                 <div class="result-content">
                                     <figure class="result_image">
-                                        @php $gallery = explode(",", $data->gallery) @endphp
-                                        @if($gallery)
-                                            <img src="{{ asset($gallery[0]) }}" alt="Result Image" class="img-fluid">
-                                        @endif
+                                        <img src="{{ asset('assets/img/items/1.jpg') }}" alt="Result Image" class="img-fluid">
                                         
                                         <h3 class="result_image_caption">Average price $30</h3>
                                     </figure>
                                     <div class="description">
-                                        <h4 class="result-sub-title"><i class="fa fa-map-marker"></i>{{ $data->location }}</h4>
-                                        <div class="rating" data-rating="{{ $data->rating }}">
-                                            <span class="stars">
-                                                <i class="active fa fa-star"></i>
-                                                <i class="active fa fa-star"></i>
-                                                <i class="active fa fa-star"></i>
-                                                <i class="active fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                            </span>
-                                            <span class="reviews">({{ $data->reviews_number }})</span>
-                                        </div>
-                                        <h3 class="result_category">{{ $data->category }}</h3>
-                                        <p class="result_desc">{{ Str::limit( $data->description, 60) }}</p>
+                                        <h4 class="result-sub-title"><i class="fa fa-map-marker"></i>{{ $data->full_address }}</h4>
                                     </div>
                                 </div>
                             </a>
@@ -68,7 +63,8 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJbmLo3SSSX4D9f1EodepmDmwnpY2OVa0"></script>
+<!-- <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script> -->
 <script type="text/javascript" src="{{ asset('js/richmarker.js') }}"></script>
 <script>
     $(document).ready(function(){

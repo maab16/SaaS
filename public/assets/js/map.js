@@ -1,4 +1,5 @@
-var map;
+    var map;
+    var map_id;
     var el;
 
     initMap();
@@ -6,6 +7,9 @@ var map;
     function initMap(){
 
         el = document.getElementById('map');
+
+        map_id = $(el).attr('data-id');
+
 
         if( el == null ){
             console.log("There is no element");
@@ -28,76 +32,35 @@ var map;
 
                 var marker = markers[i];
                 var markerContent;;
-                var thumbnailImage;
-                var color;
 
-                if( marker.marker_image != undefined ){
-                    thumbnailImage = marker.marker_image;
-                }
-                else {
-                    thumbnailImage = "getMapData";
-                }
-
-                if( markers[i]["marker_color"] ){
-                    color = marker.marker_color;
-                }
-                else {
-                    color = "";
-                }
+                console.log(marker.id);
 
 
-
-                if( marker.featured == 1 ){
-                    markerContent =
-                    '<div class="marker" data-id="'+ marker.id +'" data-url="'+ marker.url +'" data-color="'+ color +'" data-i="'+ i +'">' +
-                        '<div class="title">'+ marker.title +'</div>' +
+                markerContent =
+                    '<div class="marker" data-id="'+ marker.id +'" data-url="data.html"  data-color="#000" data-i="'+ i +'">' +
+                        '<div class="title">'+ marker.company +'</div>' +
                         '<div class="marker-wrapper">' +
-                            '<div class="featured"><i class="fa fa-check"></i></div>' +
                             '<div class="pin">' +
-                                '<div class="image" style="background-image: url('+ thumbnailImage +');"></div>' +
-                            '</div>' +
+                            '<div class="image" style="background-color: #000"></div>' +
                         '</div>' +
                     '</div>';
-                }
-                else {
-                    markerContent =
-                        '<div class="marker" data-id="'+ marker.id +'" data-url="'+ marker.url +'"  data-color="'+ color +'" data-i="'+ i +'">' +
-                            '<div class="title">'+ marker.title +'</div>' +
-                            '<div class="marker-wrapper">' +
-                                '<div class="pin">' +
-                                '<div class="image" style="background-image: url('+ thumbnailImage +');"></div>' +
-                            '</div>' +
-                        '</div>';
-                }
 
-                if( marker.marker_color ){
-                    var style = document.createElement("style");
-                    document.head.appendChild(style);
-                    document.styleSheets[0].insertRule('.map .marker[data-color="'  + color + '"] .marker-wrapper::before { background-color: '  + color + '}', 0);
-                    document.styleSheets[0].insertRule('.map .marker[data-color="'  + color + '"] .marker-wrapper .pin { border-color: '  + color + '}', 0);
-                    document.styleSheets[0].insertRule('.map .marker[data-color="'  + color + '"] .marker-wrapper .pin::before { background-color: '  + color + '}', 0);
-                    document.styleSheets[0].insertRule('.map .marker[data-color="'  + color + '"] .marker-wrapper .pin::before { border-color: '  + color + '}', 0);
-                    document.styleSheets[0].insertRule('.map .marker[data-color="'  + color + '"] .marker-wrapper .pin .image::after { border-color: '  + color + ' transparent transparent transparent }', 0);
-                    document.styleSheets[0].insertRule('.map .marker[data-color="'  + color + '"] .marker-wrapper .tag { background-color: '  + color + '}', 0);
-                    document.styleSheets[0].insertRule('.hero-section .results-wrapper .result-item[data-id="'  + markers[i]["id"] + '"] > a::before { background-color: '  + color + '}', 0);
-                    document.styleSheets[0].insertRule('.sidebar-content[data-id="'  + markers[i]["id"] + '"] .label { background-color: '  + color + '}', 0);
-                }
 
                 // Latitude, Longitude and Address
 
-                if ( marker.latitude && marker.longitude && marker.address ){
+                if ( marker.latitude && marker.longitude && marker.full_address ){
                     location = 'latLong';
                 }
 
                 // Only Address
 
-                else if ( marker.address && !marker.latitude && !marker.longitude ){
+                else if ( marker.full_address && !marker.latitude && !marker.longitude ){
                     location = 'address';
                 }
 
                 // Only Latitude and Longitude
 
-                else if ( marker.latitude && marker.longitude && !marker.address ) {
+                else if ( marker.latitude && marker.longitude && !marker.full_address ) {
                     location = 'latLong';
                 }
 
@@ -112,7 +75,7 @@ var map;
             function addRichMarker( location, marker ){
                 switch ( location ) {
                     case "latLong":
-                        richMarker = new RichMarker({
+                        var richMarker = new RichMarker({
                             position: new google.maps.LatLng( marker.latitude, marker.longitude ),
                             map: map,
                             draggable: false,
@@ -120,12 +83,13 @@ var map;
                             flat: true,
                             id: marker.id
                         });
+                        console.log(richMarker);
                         break;
                     case "address":
                         a = i;
                         var geocoder = new google.maps.Geocoder();
                         var geoOptions = {
-                            address: marker.address
+                            address: marker.full_address
                         };
 
                         geocoder.geocode(geoOptions, function(results, status) {
@@ -149,16 +113,18 @@ var map;
 
         }
 
-        function getData( url ){
+        function getData( url, id ){
             $.ajax({
                 url: "/getMapData",
                 dataType: "json",
                 type: "post",
                 data: {
+                    'map_id' : map_id,
                     '_token': $('meta[name=csrf-token]').attr('content')
                 },
                 cache: false,
                 success: function(results){
+                    console.log(results);
                     loadMarkers(results);
                 },
                 error : function (e) {

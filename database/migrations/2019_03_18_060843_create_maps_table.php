@@ -15,26 +15,19 @@ class CreateMapsTable extends Migration
     {
         Schema::create('maps', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('map_name');
+            $table->string('full_address')->nullable();
+            $table->string('state')->nullable();
+            $table->string('province')->nullable();
+            $table->string('city')->nullable();
+            $table->string('street')->nullable();
+            $table->string('postal_code')->nullable();
             $table->double('latitude')->nullable();
             $table->double('longitude')->nullable();
-            $table->integer('featured')->default(0);
-            $table->string('title')->nullable();
-            $table->string('location')->nullable();
-            $table->integer('city')->nullable();
-            $table->string('phone')->nullable();
-            $table->string('email')->nullable();
+            $table->string('company')->nullable();
             $table->string('website')->nullable();
-            $table->string('category')->nullable();
-            $table->string('rating')->nullable();
-            $table->string('reviews_number')->nullable();
-            $table->string('marker_color')->nullable();
-            $table->string('marker_image')->nullable();
-            $table->text('gallery')->nullable();
-            $table->text('tags')->nullable();
-            $table->string('additional_info')->nullable();
-            $table->string('url')->nullable();
-            $table->text('description')->nullable();
-            $table->text('opening_hours')->nullable();
+            $table->string('email')->nullable();
+            $table->string('telephone')->nullable();
             $table->timestamps();
         });
     }
